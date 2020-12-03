@@ -1,9 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const {} = require('../controllers/catalog')
+const { createCatalogItem, getCatalogItems } = require('../controllers/catalog')
 
-router.post('/signIn', signIn)
-router.post('/signUp', signUp)
-router.get('/getMe', getMe)
+router.post('/', createCatalogItem)
+router.get('/', getCatalogItems)
 
 module.exports = router

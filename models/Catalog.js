@@ -5,15 +5,31 @@ const catalogSchema = new mongoose.Schema({
   description: {
     type: String
   },
-  parent: {
-    type: String
+  parent: [
+    {
+      type: String
+    }
+  ],
+  rank: {
+    type: Number,
+    default: 50
   },
   type: {
-    type: String
+    type: String,
+    required: true
   },
   isActive: {
     type: Boolean,
     default: true
+  },
+  mainImageUrl: {
+    type: String
+  },
+  description: {
+    type: String
+  },
+  price: {
+    type: Number
   }
 })
 
