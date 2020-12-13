@@ -29,7 +29,7 @@ module.exports.allImageUrls = async (req, res) => {
 
 module.exports.createCatalogItem = async (req, res) => {
   try {
-    const newItem = await Catalog.create({
+    const catalogItem = {
       name: req.body.name,
       type: req.body.type,
       mainImageUrl: req.body.mainImageUrl,
@@ -37,16 +37,26 @@ module.exports.createCatalogItem = async (req, res) => {
       parent: req.body.parent,
       description: req.body.description,
       price: req.body.price
-    })
-    res.status(200).json(newItem)
+    }
+    if (req.body._id) {
+      const updatedItem = await Catalog.findByIdAndUpdate(req.body._id, catalogItem)
+      res.status(200).json(updatedItem)
+    } else {
+      const newItem = await Catalog.create(catalogItem)
+      res.status(200).json(newItem)
+    }
   } catch (e) {
     res.status(500).json({ message: e.message })
   }
 }
 
 module.exports.getCatalogItems = async (req, res) => {
-  const options = {
-    type: req.query.type || 'group'
+  const options = {}
+  if (req.query.level === 'root') {
+    options.parent = []
+  }
+  if (req.query._id) {
+    options._id = req.query._id
   }
   try {
     const catalogItems = await Catalog.find(options)
