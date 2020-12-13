@@ -22,14 +22,13 @@ const catalogSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
-  mainImageUrl: {
-    type: String
-  },
+  mainImageUrl: String,
+  images: [String],
   description: {
     type: String
   },
-  price: {
-    type: Number
+  sku: {
+    type: String
   }
 })
 

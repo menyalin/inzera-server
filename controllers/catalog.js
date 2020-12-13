@@ -36,7 +36,8 @@ module.exports.createCatalogItem = async (req, res) => {
       rank: req.body.rank,
       parent: req.body.parent,
       description: req.body.description,
-      price: req.body.price
+      sku: req.body.sku,
+      images: req.body.images
     }
     if (req.body._id) {
       const updatedItem = await Catalog.findByIdAndUpdate(req.body._id, catalogItem)
@@ -52,11 +53,16 @@ module.exports.createCatalogItem = async (req, res) => {
 
 module.exports.getCatalogItems = async (req, res) => {
   const options = {}
-  if (req.query.level === 'root') {
-    options.parent = []
-  }
   if (req.query._id) {
     options._id = req.query._id
+  }
+  if (req.query.parent) {
+    if (req.query.parent === 'root') options.parent = []
+    else options.parent = req.query.parent
+  }
+  if (req.query.forItems) {
+    options.type = 'group'
+    options.parent = { $ne: [] }
   }
   try {
     const catalogItems = await Catalog.find(options)
