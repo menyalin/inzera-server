@@ -5,11 +5,7 @@ const catalogSchema = new mongoose.Schema({
   description: {
     type: String
   },
-  parent: [
-    {
-      type: String
-    }
-  ],
+  parent: [ String ],
   rank: {
     type: Number,
     default: 50
@@ -23,13 +19,11 @@ const catalogSchema = new mongoose.Schema({
     default: true
   },
   mainImageUrl: String,
-  images: [String],
-  description: {
-    type: String
-  },
-  sku: {
-    type: String
-  }
+  images: [ String ],
+  description: String,
+  sku: String,
+  containSubgroups: Boolean,
+  containSku: Boolean
 })
 
 module.exports = mongoose.model('Catalog', catalogSchema)

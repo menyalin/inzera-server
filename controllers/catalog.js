@@ -37,7 +37,9 @@ module.exports.createCatalogItem = async (req, res) => {
       parent: req.body.parent,
       description: req.body.description,
       sku: req.body.sku,
-      images: req.body.images
+      images: req.body.images,
+      containSubgroups: req.body.containSubgroups,
+      containSku: req.body.containSku
     }
     if (req.body._id) {
       const updatedItem = await Catalog.findByIdAndUpdate(req.body._id, catalogItem)
