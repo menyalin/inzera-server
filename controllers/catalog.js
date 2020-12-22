@@ -66,8 +66,11 @@ module.exports.getCatalogItems = async (req, res) => {
     options.type = 'group'
     options.parent = { $ne: [] }
   }
+  if (req.query.allGroups) {
+    options.type = 'group'
+  }
   try {
-    const catalogItems = await Catalog.find(options)
+    const catalogItems = await Catalog.find(options).populate('prices')
     res.status(200).json(catalogItems)
   } catch (e) {
     res.status(500).json({ message: e.message })

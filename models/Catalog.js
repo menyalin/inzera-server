@@ -5,7 +5,7 @@ const catalogSchema = new mongoose.Schema({
   description: {
     type: String
   },
-  parent: [ String ],
+  parent: [String],
   rank: {
     type: Number,
     default: 50
@@ -18,8 +18,14 @@ const catalogSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  prices: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      refs: 'Price'
+    }
+  ],
   mainImageUrl: String,
-  images: [ String ],
+  images: [String],
   description: String,
   sku: String,
   containSubgroups: Boolean,
