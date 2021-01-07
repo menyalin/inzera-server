@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+const { Schema, model } = require('mongoose')
 
-const catalogSchema = new mongoose.Schema({
+const catalogSchema = new Schema({
   name: String,
   description: {
     type: String
@@ -20,8 +20,8 @@ const catalogSchema = new mongoose.Schema({
   },
   prices: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      refs: 'Price'
+      type: Schema.Types.ObjectId,
+      ref: 'Price'
     }
   ],
   mainImageUrl: String,
@@ -32,4 +32,4 @@ const catalogSchema = new mongoose.Schema({
   containSku: Boolean
 })
 
-module.exports = mongoose.model('Catalog', catalogSchema)
+module.exports = model('Catalog', catalogSchema)

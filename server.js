@@ -7,6 +7,7 @@ const passport = require('passport')
 
 const authRouter = require('./api/auth')
 const catalogRouter = require('./api/catalog')
+const priceRouter = require('./api/price')
 
 const port = 3000
 
@@ -19,10 +20,6 @@ app.use(passport.initialize())
 require('./middlewares/passport')(passport)
 app.use('/api/static', express.static(path.join(__dirname, 'static')))
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
 app.use(
   '/api/auth',
   cors(),
@@ -34,6 +31,12 @@ app.use(
   cors(),
   // passport.authenticate('jwt', { session: false }),
   catalogRouter
+)
+app.use(
+  '/api/price',
+  cors(),
+  // passport.authenticate('jwt', { session: false }),
+  priceRouter
 )
 
 app.listen(port, () => {

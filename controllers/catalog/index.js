@@ -1,6 +1,7 @@
-const Catalog = require('../models/Catalog')
+const Catalog = require('../../models/Catalog')
 const fs = require('fs/promises')
 const path = require('path')
+const { getItems } = require('./logic')
 
 module.exports.allImageUrls = async (req, res) => {
   const reqFolder = req.query.folder
@@ -55,22 +56,39 @@ module.exports.createCatalogItem = async (req, res) => {
 
 module.exports.getCatalogItems = async (req, res) => {
   const options = {}
+  const priceOptions = {}
+  let withPrices = true
   if (req.query._id) {
     options._id = req.query._id
   }
   if (req.query.parent) {
+    withPrices = false
     if (req.query.parent === 'root') options.parent = []
     else options.parent = req.query.parent
   }
   if (req.query.forItems) {
     options.type = 'group'
     options.parent = { $ne: [] }
+    withPrices = false
   }
   if (req.query.allGroups) {
     options.type = 'group'
+    withPrices = false
+  }
+  if (req.query.allItems) {
+    options.type = 'item'
+    withPrices = false
+  }
+  if (req.query.search) {
+    options.type = 'item'
+    options.name = { $regex: new RegExp(req.query.search, 'i') }
+  }
+  if (req.query.date && withPrices) {
+    priceOptions.startDate = { $lte: req.query.date_ }
+    priceOptions.$or = [{ endDate: { $gte: req.query.date } }, { endDate: null }]
   }
   try {
-    const catalogItems = await Catalog.find(options).populate('prices')
+    const catalogItems = await getItems(options, withPrices, priceOptions)
     res.status(200).json(catalogItems)
   } catch (e) {
     res.status(500).json({ message: e.message })
