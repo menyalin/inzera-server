@@ -39,7 +39,7 @@ module.exports.getPrice = async (req, res) => {
 
 module.exports.setPrices = async (req, res) => {
   const { startDate, endDate, prices, description } = req.body
-  if (!prices.length || !startDate) res.status(400).json({ message: 'bad request' })
+  if (!prices || !prices.length || !startDate) res.status(400).json({ message: 'bad request' })
   else {
     const skuList = prices.map(item => item.sku)
     const skuDocs = await getSkuDocs(skuList)
