@@ -36,14 +36,14 @@ services:
 volumes:
   mongo_storage:
     driver: local
-      driver_opts:
-        o: bind
-        device: /home/alexey/app/db_data
+    driver_opts:
+      o: bind
+      device: /home/alexey/app/db_data
   mongo_config:
     driver: local
-        driver_opts:
-          o: bind
-          device: /home/alexey/app/db_config
+    driver_opts:
+      o: bind
+      device: /home/alexey/app/db_config
 
 networks:
   back:
