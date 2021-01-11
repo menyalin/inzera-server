@@ -35,13 +35,15 @@ services:
   #   command: 'npm run dev'
 volumes:
   mongo_storage:
-    driver: local
+    name: mongoStorageVolume
     driver_opts:
+      type: nfs
       o: bind
       device: /home/alexey/app/db_data
   mongo_config:
-    driver: local
+    name: mongoConfigVolume 
     driver_opts:
+      type: nfs
       o: bind
       device: /home/alexey/app/db_config
 
