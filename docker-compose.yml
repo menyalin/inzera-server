@@ -1,0 +1,50 @@
+version: '2.4'
+services:
+  db:
+    image: mongo
+    container_name: mongo_store
+    restart: on-failure
+    # command: 'mongod --auth'
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_storage:/data/db
+      - mongo_config:/data/configdb
+    networks:
+      - back
+  # dev_server:
+  #   image: node
+  #   container_name: api_dev_server
+  #   user: 'root'
+  #   working_dir: /home/node/app
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - ./server:/home/node/app
+  #   environment:
+  #     - DB_URL=db
+  #     - NODE_ENV=development
+  #     - DB_NAME='transport_dev'
+  #     - DB_USER='-'
+  #     - DB_PASS='-'
+  #     - PORT="3000"
+  #   networks:
+  #     - back
+  #   command: 'npm run dev'
+volumes:
+  mongo_storage:
+    driver: local
+      driver_opts:
+        o: bind
+        device: /home/alexey/app/db_data
+  mongo_config:
+    driver: local
+        driver_opts:
+          o: bind
+          device: /home/alexey/app/db_config
+
+networks:
+  back:
+    driver: bridge
