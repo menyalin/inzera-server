@@ -62,7 +62,6 @@ module.exports.getCatalogItems = async (req, res) => {
     options._id = req.query._id
   }
   if (req.query.parent) {
-    withPrices = false
     if (req.query.parent === 'root') options.parent = []
     else options.parent = req.query.parent
   }
@@ -83,8 +82,8 @@ module.exports.getCatalogItems = async (req, res) => {
     options.type = 'item'
     options.name = { $regex: new RegExp(req.query.search, 'i') }
   }
-  if (req.query.date && withPrices) {
-    priceOptions.startDate = { $lte: req.query.date_ }
+  if (req.query.date) {
+    priceOptions.startDate = { $lte: req.query.date }
     priceOptions.$or = [{ endDate: { $gte: req.query.date } }, { endDate: null }]
   }
   try {
