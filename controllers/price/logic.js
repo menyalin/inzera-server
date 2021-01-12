@@ -2,11 +2,21 @@ const SetPricesModel = require('../../models/SetPrices')
 const Catalog = require('../../models/Catalog')
 const PriceModel = require('../../models/Price')
 
-module.exports.createSetPrice = async function (startDate, endDate, description) {
+module.exports.createSetPrice = async function (
+  startDate,
+  endDate,
+  description,
+  isPromo,
+  discount,
+  promoDescription
+) {
   const newSetPrices = await SetPricesModel.create({
     startDate,
     endDate,
-    description
+    description,
+    isPromo,
+    discount,
+    promoDescription
   })
   return newSetPrices
 }
@@ -42,6 +52,9 @@ module.exports.createPriceItem = async (sku, price, setPrice) => {
       oldPrice: price.oldPrice,
       startDate: setPrice.startDate,
       endDate: setPrice.endDate,
+      isPromo: setPrice.isPromo,
+      discount: setPrice.discount,
+      promoDescription: setPrice.promoDescription,
       description: price.description,
       version: existedPrices[0] ? existedPrices[0].version + 1 : 0
     })

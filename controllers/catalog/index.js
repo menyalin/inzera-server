@@ -60,7 +60,7 @@ module.exports.getCatalogItems = async (req, res) => {
   let withPrices = true
   if (req.query._id) {
     options._id = req.query._id
-  }
+  }   
   if (req.query.parent) {
     if (req.query.parent === 'root') options.parent = []
     else options.parent = req.query.parent

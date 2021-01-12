@@ -38,12 +38,12 @@ module.exports.getPrice = async (req, res) => {
 // }
 
 module.exports.setPrices = async (req, res) => {
-  const { startDate, endDate, prices, description } = req.body
+  const { startDate, endDate, prices, description, isPromo, discount, promoDescription } = req.body
   if (!prices.length || !startDate) res.status(400).json({ message: 'bad request' })
   else {
     const skuList = prices.map(item => item.sku)
     const skuDocs = await getSkuDocs(skuList)
-    const newSetPrice = await createSetPrice(startDate, endDate, description)
+    const newSetPrice = await createSetPrice(startDate, endDate, description, isPromo, discount, promoDescription)
     for (let i = 0; i < skuDocs.length; i++) {
       const price = prices.find(price => price.sku === skuDocs[i]._id.toString())
       if (price) {
@@ -70,14 +70,24 @@ module.exports.deleteSetPrice = async (req, res) => {
     const price_ids = setPrice.prices.map(item => item._id)
     // очищаем ссылки на цены в таблице Catalog
     setPrice.prices.forEach(async price => {
-      price.sku.prices = price.sku.prices.filter(item => {
-        item._id.toString() !== price._id.toString()
-      })
+      price.sku.prices = price.sku.prices.filter(
+        item => item._id.toString() !== price._id.toString()
+      )
       await price.sku.save()
     })
     await deletePriceInPrices(price_ids)
     await deleteSetPrice(setPrice._id)
     res.status(200).json({ message: 'ok' })
+  } catch (e) {
+    res.status(500).json(e)
+  }
+}
+
+module.exports.getSetPriceByIdCtrl = async (req, res) => {
+  const _id = req.params._id
+  try {
+    const setPrice = await getSetPriceById(_id)
+    res.json(setPrice)
   } catch (e) {
     res.status(500).json(e)
   }
