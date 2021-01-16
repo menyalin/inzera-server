@@ -8,6 +8,15 @@ const _sortingPrices = (a, b) => {
   if (a.version < b.version) return 1
 }
 
+const _getActualPrice = catalogItem => {
+  if (catalogItem.type === 'item' && catalogItem.prices.length > 1) {
+    const sortedPrices = catalogItem.prices.sort(_sortingPrices)
+    return Object.assign({}, sortedPrices[0])
+  } else {
+    return []
+  }
+}
+
 module.exports.getItems = async (options, withPrices = false, priceOptions) => {
   let catalogItems = []
   if (withPrices) {
@@ -17,13 +26,26 @@ module.exports.getItems = async (options, withPrices = false, priceOptions) => {
     })
     // получаем актуальную цену на товар
     for (let i = 0; i < catalogItems.length; i++) {
-      if (catalogItems[i].type === 'item' && catalogItems[i].prices.length > 1) {
-        const sortedPrices = catalogItems[i].prices.sort(_sortingPrices)
-        catalogItems[i].prices = Object.assign({}, sortedPrices[0])
-      }
+      catalogItems[i].prices = _getActualPrice(catalogItems[i])
     }
   } else {
     catalogItems = await CatalogModel.find(options)
   }
   return catalogItems
+}
+
+module.exports.getCatalogById = async (id, date) => {
+  if (!date) date = moment().format('YYYY-MM-DD')
+  const priceOptions = {
+    startDate: { $lte: date },
+    $or: [{ endDate: { $gte: date } }, { endDate: null }]
+  }
+  const item = await CatalogModel.findById(id)
+    .populate({
+      path: 'prices',
+      match: priceOptions
+    })
+    .populate('brand')
+  item.prices = _getActualPrice(item)
+  return item
 }

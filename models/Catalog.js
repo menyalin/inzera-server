@@ -24,12 +24,20 @@ const catalogSchema = new Schema({
       ref: 'Price'
     }
   ],
+  brand: {
+    type: Schema.Types.ObjectId,
+    ref: 'Detail'
+  },
   mainImageUrl: String,
   images: [String],
   description: String,
   sku: String,
   containSubgroups: Boolean,
-  containSku: Boolean
+  containSku: Boolean,
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 })
 
 module.exports = model('Catalog', catalogSchema)

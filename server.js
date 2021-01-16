@@ -1,4 +1,6 @@
 require('dotenv').config()
+const compression = require('compression')
+
 const express = require('express')
 const app = express()
 const path = require('path')
@@ -8,12 +10,15 @@ const passport = require('passport')
 const authRouter = require('./api/auth')
 const catalogRouter = require('./api/catalog')
 const priceRouter = require('./api/price')
+const detailRouter = require('./api/detail')
 
 const port = 3000
 
 require('./mongoDb')
 
+app.use(compression())
 app.use(cors())
+app.disable('x-powered-by')
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(passport.initialize())
@@ -37,6 +42,12 @@ app.use(
   cors(),
   // passport.authenticate('jwt', { session: false }),
   priceRouter
+)
+app.use(
+  '/api/details',
+  cors(),
+  // passport.authenticate('jwt', { session: false }),
+  detailRouter
 )
 
 app.listen(port, () => {

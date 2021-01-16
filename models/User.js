@@ -19,7 +19,8 @@ const userSchema = new mongoose.Schema({
     type: String
   },
   createdAt: {
-    type: Date
+    type: Date,
+    default: Date.now
   },
   project: {
     type: String,
@@ -42,10 +43,6 @@ userSchema.methods.isCorrectPassword = async function (pass) {
   const res = await bcrypt.compare(pass, this.password)
   return !!res
 }
-userSchema.pre('save', function (next) {
-  if (!this.created) this.createdAt = new Date()
-  next()
-})
 
 userSchema.pre('save', function (next) {
   const tmpUser = this

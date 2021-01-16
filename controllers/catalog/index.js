@@ -1,7 +1,7 @@
 const Catalog = require('../../models/Catalog')
 const fs = require('fs/promises')
 const path = require('path')
-const { getItems } = require('./logic')
+const { getItems, getCatalogById } = require('./logic')
 
 module.exports.allImageUrls = async (req, res) => {
   const reqFolder = req.query.folder
@@ -60,7 +60,7 @@ module.exports.getCatalogItems = async (req, res) => {
   let withPrices = true
   if (req.query._id) {
     options._id = req.query._id
-  }   
+  }
   if (req.query.parent) {
     if (req.query.parent === 'root') options.parent = []
     else options.parent = req.query.parent
@@ -91,5 +91,16 @@ module.exports.getCatalogItems = async (req, res) => {
     res.status(200).json(catalogItems)
   } catch (e) {
     res.status(500).json({ message: e.message })
+  }
+}
+
+module.exports.getCatalogByIdCtrl = async (req, res) => {
+  const _id = req.params.id
+  if (!_id) res.status(400).json({ message: 'bad request, no _id param' })
+  try {
+    const catalogItem = await getCatalogById(_id, req.query.date)
+    res.json(catalogItem)
+  } catch (e) {
+    res.status(500).json({ message: 'error in "getCatalogByIdCtrl"' })
   }
 }

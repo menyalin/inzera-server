@@ -30,7 +30,7 @@ const priceSchema = new Schema({
   description: String,
   createdAt: {
     type: Date,
-    default: Date.now()
+    default: Date.now
   },
   isPromo: {
     type: Boolean,
