@@ -16,7 +16,7 @@ module.exports.getAllDetailsCtrl = async (req, res) => {
 }
 
 module.exports.newDetailCtrl = async (req, res) => {
-  if (!req.body.name || !req.body.description) res.status(400).json({ message: 'bad request' })
+  if (!req.body.name || !req.body.description || !req.body.type) res.status(400).json({ message: 'bad request' })
   try {
     const newDetail = await createDetail(req.body)
     res.status(200).json(newDetail)
@@ -39,7 +39,7 @@ module.exports.getDetailByIdCtrl = async (req, res) => {
 module.exports.updateDetailCtrl = async (req, res) => {
   const _id = req.params.id
   if (!_id) res.status(400).json({ message: 'bad request, no _id param' })
-  if (!req.body.name || !req.body.description) res.status(400).json({ message: 'bad request' })
+  if (!req.body.name || !req.body.description || !req.body.type) res.status(400).json({ message: 'bad request' })
   const payload = {
     type: req.body.type,
     name: req.body.name,
