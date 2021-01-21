@@ -15,7 +15,7 @@ const seriesRouter = require('./api/series')
 
 const port = 3000
 
-require('./mongoDb')
+require('./mongoDB')
 
 app.use(compression())
 app.use(cors())

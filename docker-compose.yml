@@ -3,7 +3,7 @@ services:
   db:
     image: mongo
     container_name: mongo_store
-    restart: on-failure
+    restart: always
     # command: 'mongod --auth'
     ports:
       - 27017:27017
