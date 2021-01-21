@@ -11,6 +11,7 @@ const authRouter = require('./api/auth')
 const catalogRouter = require('./api/catalog')
 const priceRouter = require('./api/price')
 const detailRouter = require('./api/detail')
+const seriesRouter = require('./api/series')
 
 const port = 3000
 
@@ -42,6 +43,12 @@ app.use(
   cors(),
   // passport.authenticate('jwt', { session: false }),
   priceRouter
+)
+app.use(
+  '/api/series',
+  cors(),
+  // passport.authenticate('jwt', { session: false }),
+  seriesRouter
 )
 app.use(
   '/api/details',

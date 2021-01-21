@@ -2,6 +2,7 @@ const { Schema, model } = require('mongoose')
 
 const catalogSchema = new Schema({
   name: String,
+  nameForSeries: String,
   description: {
     type: String
   },
@@ -28,10 +29,30 @@ const catalogSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Detail'
   },
+  series: {
+    type: Schema.Types.ObjectId,
+    ref: 'Series'
+  },
+  sommelier: {
+    type: Schema.Types.ObjectId,
+    ref: 'Detail'
+  },
+  recomendation: {
+    type: Schema.Types.ObjectId,
+    ref: 'Detail'
+  },
+  volume: Number,
+  company: {
+    type: Schema.Types.ObjectId,
+    ref: 'Detail'
+  },
   mainImageUrl: String,
   images: [String],
   description: String,
   sku: String,
+  skuType: String,
+  segment: String,
+  abv: Number,
   containSubgroups: Boolean,
   containSku: Boolean,
   createdAt: {

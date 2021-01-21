@@ -1,3 +1,5 @@
+const moment = require('moment')
+const { populate } = require('../../models/Catalog')
 const CatalogModel = require('../../models/Catalog')
 
 const _sortingPrices = (a, b) => {
@@ -9,7 +11,8 @@ const _sortingPrices = (a, b) => {
 }
 
 const _getActualPrice = catalogItem => {
-  if (catalogItem.type === 'item' && catalogItem.prices.length > 1) {
+  // принимает на вход экземпляр mongoose CatalogItem
+  if (catalogItem.type === 'item' && catalogItem.prices.length >= 1) {
     const sortedPrices = catalogItem.prices.sort(_sortingPrices)
     return Object.assign({}, sortedPrices[0])
   } else {
@@ -40,12 +43,22 @@ module.exports.getCatalogById = async (id, date) => {
     startDate: { $lte: date },
     $or: [{ endDate: { $gte: date } }, { endDate: null }]
   }
-  const item = await CatalogModel.findById(id)
-    .populate({
-      path: 'prices',
-      match: priceOptions
-    })
-    .populate('brand')
-  item.prices = _getActualPrice(item)
-  return item
+  try {
+    const item = await CatalogModel.findById(id)
+      .populate({
+        path: 'prices',
+        match: priceOptions
+      })
+      .populate('brand')
+      .populate('company')
+      .populate('recomendation')
+      .populate('sommelier')
+      .populate({ path: 'series', populate: 'sku' })
+
+    item.prices = _getActualPrice(item)
+    return item
+  } catch (e) {
+    console.error(e)
+    throw new Error(e)
+  }
 }

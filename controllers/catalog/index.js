@@ -32,15 +32,26 @@ module.exports.createCatalogItem = async (req, res) => {
   try {
     const catalogItem = {
       name: req.body.name,
+      nameForSeries: req.body.nameForSeries,
       type: req.body.type,
       mainImageUrl: req.body.mainImageUrl,
       rank: req.body.rank,
       parent: req.body.parent,
+      volume: req.body.volume,
+      company: req.body.company,
+      brand: req.body.brand,
+      sommelier: req.body.sommelier,
+      recomendation: req.body.recomendation,
       description: req.body.description,
       sku: req.body.sku,
+      abv: req.body.abv,
+      skuType: req.body.skuType,
+      series: req.body.series,
+      segment: req.body.segment,
       images: req.body.images,
       containSubgroups: req.body.containSubgroups,
-      containSku: req.body.containSku
+      containSku: req.body.containSku,
+      isActive: req.body.isActive
     }
     if (req.body._id) {
       const updatedItem = await Catalog.findByIdAndUpdate(req.body._id, catalogItem)
@@ -82,7 +93,12 @@ module.exports.getCatalogItems = async (req, res) => {
     options.type = 'item'
     options.name = { $regex: new RegExp(req.query.search, 'i') }
   }
+  if (req.query.skuArray) {
+    options._id = req.query.skuArray
+    withPrices = false
+  }
   if (req.query.date) {
+    withPrices = true
     priceOptions.startDate = { $lte: req.query.date }
     priceOptions.$or = [{ endDate: { $gte: req.query.date } }, { endDate: null }]
   }
@@ -101,6 +117,7 @@ module.exports.getCatalogByIdCtrl = async (req, res) => {
     const catalogItem = await getCatalogById(_id, req.query.date)
     res.json(catalogItem)
   } catch (e) {
+    console.log(e)
     res.status(500).json({ message: 'error in "getCatalogByIdCtrl"' })
   }
 }
