@@ -5,8 +5,9 @@ services:
     image: nginx
     ports:
       - "80:80"
-    #volumes:
-    # - ./nginx.conf:/etc/nginx/nginx.conf
+    volumes:
+     - ./nginx.conf:/etc/nginx/nginx.conf
+     - ../inzera-client/dist:/usr/share/nginx/html:ro
   db:
     image: mongo
     container_name: mongo_store
