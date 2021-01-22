@@ -7,7 +7,7 @@ services:
       - "80:80"
     volumes:
      - ./nginx.conf:/etc/nginx/nginx.conf
-     - client_static:/var/www/html
+     - client_static:/var/www/html/
   db:
     image: mongo
     container_name: mongo_store
@@ -47,7 +47,7 @@ volumes:
     driver_opts:
       type: nfs
       o: bind
-      device: /home/alexey/app/inzera-client/dist
+      device: /home/alexey/app/inzera-client/dist/
   mongo_storage:
     name: mongoStorageVolume
     driver_opts:
