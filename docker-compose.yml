@@ -1,11 +1,12 @@
 version: '3.9'
 services:
   nginx:
+    container_name: nginx
     image: nginx
     ports:
       - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+    #volumes:
+    # - ./nginx.conf:/etc/nginx/nginx.conf
   db:
     image: mongo
     container_name: mongo_store
