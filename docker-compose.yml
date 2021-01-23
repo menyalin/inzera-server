@@ -21,7 +21,17 @@ services:
       - mongo_storage:/data/db
       - mongo_config:/data/configdb
     networks:
-      - back
+      - host
+  api: 
+    image: node
+    container_name: api_server
+
+    depends_on:
+      - db
+    ports:
+      - 3000:3000
+
+
   # dev_server:
   #   image: node
   #   container_name: api_dev_server
@@ -66,3 +76,4 @@ volumes:
 networks:
   back:
     driver: bridge
+  host:
