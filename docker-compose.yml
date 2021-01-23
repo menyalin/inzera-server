@@ -66,4 +66,3 @@ volumes:
 networks:
   back:
     driver: bridge
-  host:
