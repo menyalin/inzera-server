@@ -8,6 +8,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - client_static:/var/www/html
+      - image_static:/var/www/static
     networks: 
       - host
   db:
@@ -48,6 +49,13 @@ volumes:
       type: nfs
       o: bind
       device: /home/alexey/app/inzera-client/dist
+
+  image_static:
+    name: image_static
+    driver_opts:
+      type: nfs
+      o: bind
+      device: /home/alexey/app/inzera-server/static
   mongo_storage:
     name: mongoStorageVolume
     driver_opts:
