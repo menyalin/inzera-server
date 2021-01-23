@@ -9,7 +9,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - client_static:/var/www/html
     networks: 
-      - host 
+      - host
   db:
     image: mongo
     container_name: mongo_store
