@@ -20,8 +20,6 @@ services:
     volumes:
       - mongo_storage:/data/db
       - mongo_config:/data/configdb
-    networks:
-      - back
   # dev_server:
   #   image: node
   #   container_name: api_dev_server
@@ -65,5 +63,3 @@ volumes:
 
 networks:
   host:
-  back:
-    driver: bridge
