@@ -64,5 +64,6 @@ volumes:
       device: /home/alexey/app/db_config
 
 networks:
+  host:
   back:
     driver: bridge
