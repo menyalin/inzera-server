@@ -22,9 +22,9 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  project: {
-    type: String,
-    default: 'inzera'
+  isActive: {
+    type: Boolean,
+    default: false
   }
 })
 
