@@ -5,7 +5,8 @@ const express = require('express')
 const app = express()
 const path = require('path')
 const cors = require('cors')
-const passport = require('passport')
+
+const getUserFromJWT = require('./middlewares/getUserFromJWT')
 
 const authRouter = require('./api/auth')
 const catalogRouter = require('./api/catalog')
@@ -22,40 +23,14 @@ app.use(cors())
 app.disable('x-powered-by')
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(passport.initialize())
-require('./middlewares/passport')(passport)
 app.use('/api/static', express.static(path.join(__dirname, 'static')))
+app.use(getUserFromJWT)
 
-app.use(
-  '/api/auth',
-  cors(),
-  // passport.authenticate('jwt', { session: false }),
-  authRouter
-)
-app.use(
-  '/api/catalog',
-  cors(),
-  // passport.authenticate('jwt', { session: false }),
-  catalogRouter
-)
-app.use(
-  '/api/price',
-  cors(),
-  // passport.authenticate('jwt', { session: false }),
-  priceRouter
-)
-app.use(
-  '/api/series',
-  cors(),
-  // passport.authenticate('jwt', { session: false }),
-  seriesRouter
-)
-app.use(
-  '/api/details',
-  cors(),
-  // passport.authenticate('jwt', { session: false }),
-  detailRouter
-)
+app.use('/api/auth', cors(), authRouter)
+app.use('/api/catalog', cors(), catalogRouter)
+app.use('/api/price', cors(), priceRouter)
+app.use('/api/series', cors(), seriesRouter)
+app.use('/api/details', cors(), detailRouter)
 
 app.listen(port, () => {
   console.log(`server started on http://localhost:${port}`)
