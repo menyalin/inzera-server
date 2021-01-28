@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const {
-  createPrice,
   getPrice,
-  setPrices,
+  createSetPricesCtrl,
+  updateSetPricesCtrl,
   getSetPrices,
   deleteSetPrice,
   getSetPriceByIdCtrl
@@ -16,7 +16,8 @@ router.get('/', getPrice)
 router.get('/setPrices', getSetPrices)
 router.get('/setPrices/:_id', getSetPriceByIdCtrl)
 
-router.post('/setPrices', setPrices)
+router.post('/setPrices', createSetPricesCtrl)
+router.put('/setPrices/:_id', updateSetPricesCtrl)
 router.delete('/setPrices/:_id', deleteSetPrice)
 
 module.exports = router

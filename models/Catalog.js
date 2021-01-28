@@ -61,4 +61,9 @@ const catalogSchema = new Schema({
   }
 })
 
+catalogSchema.methods.deletePrice = async function (priceId) {
+  this.prices = this.prices.filter(item => item.toString() !== priceId)
+  this.save()
+}
+
 module.exports = model('Catalog', catalogSchema)

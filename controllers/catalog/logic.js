@@ -53,7 +53,13 @@ module.exports.getCatalogById = async (id, date) => {
       .populate('company')
       .populate('recomendation')
       .populate('sommelier')
-      .populate({ path: 'series', populate: 'sku' })
+      .populate({
+        path: 'series',
+        populate: {
+          path: 'sku',
+          match: { isActive: true }
+        }
+      })
 
     item.prices = _getActualPrice(item)
     return item
