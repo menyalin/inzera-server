@@ -2,25 +2,25 @@ const User = require('../models/User')
 
 module.exports.signIn = async (req, res) => {
   try {
+    if (!req.body.login || !req.body.password) throw new Error('invalid request data')
     const { login, password } = req.body
-    if (!login || !password) res.status(500).json({ message: 'bad params' })
     const tmpUser = await User.findOne({ login, isActive: true })
     if (!!tmpUser && (await tmpUser.isCorrectPassword(password))) {
       res.status(200).json({ token: await tmpUser.createToken() })
     } else res.status(400).json({ message: 'user not found' })
   } catch (e) {
-    res.status(500).json({ message: e.message })
+    res.status(500).json(e)
   }
 }
 
 module.exports.signUp = async (req, res) => {
-  const { login, password } = req.body
-  if (!login || !password) res.status(500).json({ message: 'invalid request data' })
   try {
+    if (!req.body.login || !req.body.password) throw new Error('invalid request data')
+    const { login, password } = req.body
     const newUser = await User.create({ login, password })
     res.status(201).json({ token: await newUser.createToken() })
   } catch (e) {
-    res.status(500).json({ message: e.message })
+    throw e
   }
 }
 
@@ -31,6 +31,6 @@ module.exports.getUserDataCtrl = async (req, res) => {
       res.status(200).json(tmpUser)
     } else res.status(511).json({ message: 'bad token' })
   } catch (e) {
-    res.sendStatus(500)
+    throw new Error('error in getUserDataCtrl')
   }
 }
