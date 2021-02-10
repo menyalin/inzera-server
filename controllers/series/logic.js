@@ -24,3 +24,4 @@ module.exports.deleteSeries = async _id => {
   const res = await SeriesModel.findByIdAndRemove(_id)
   return res
 }
+

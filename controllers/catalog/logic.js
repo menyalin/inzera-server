@@ -1,6 +1,7 @@
 const moment = require('moment')
-const { populate } = require('../../models/Catalog')
 const CatalogModel = require('../../models/Catalog')
+const SeriesModel = require('../../models/Series')
+const PriceModel = require('../../models/Price')
 
 const _sortingPrices = (a, b) => {
   if (new Date(a.startDate) > new Date(b.startDate)) return -1
@@ -67,4 +68,21 @@ module.exports.getCatalogById = async (id, date) => {
     console.error(e)
     throw new Error(e)
   }
+}
+
+module.exports.deleteCatalogById = async (_id) => {
+    await CatalogModel.deleteOne({_id })
+}
+
+module.exports.deleteCatalogFromSeries = async skuId => {
+  let series = await SeriesModel.find({ sku: skuId })
+  for (let i = 0; i < series.length; i++) {
+    series[i].sku = series[i].sku.filter(item => item.toString() !== skuId.toString())
+    await series[i].save()
+  }
+}
+
+module.exports.getPricesIdByCatalogId = async skuId => {
+  let prices = await PriceModel.find({ sku: skuId })
+  return prices.map(item => item._id)
 }

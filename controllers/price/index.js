@@ -45,9 +45,9 @@ module.exports.createSetPricesCtrl = async (req, res) => {
 }
 module.exports.updateSetPricesCtrl = async (req, res) => {
   try {
-    if (!req.userId) res.status(403).json({ message: 'no auth' })
+    if (!req.userId) return res.status(403).json({ message: 'no auth' })
     if (!req.body.prices.length || !req.body.startDate)
-      res.status(400).json({ message: 'bad request' })
+      return res.status(400).json({ message: 'bad request' })
     const setPriceFields = {
       startDate: req.body.startDate,
       endDate: req.body.endDate,
@@ -65,9 +65,7 @@ module.exports.updateSetPricesCtrl = async (req, res) => {
     })
     // Удаляем цены из таблицы Prices
     const priceIds = updatingSetPrice.prices.map(item => item._id)
-    await deletePriceInPrices(priceIds)
-
-    updatingSetPrice.prices = [] // Очищаем таблицу с ценами в SetPrice
+    await deletePriceInPrices(priceIds, true)
 
     updatingSetPrice = Object.assign(updatingSetPrice, setPriceFields) // Обновляем реквизиты SetPrice
     const skuList = req.body.prices.map(item => item.sku)

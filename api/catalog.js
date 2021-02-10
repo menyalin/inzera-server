@@ -4,12 +4,14 @@ const {
   createCatalogItem,
   getCatalogItems,
   allImageUrls,
-  getCatalogByIdCtrl
+  getCatalogByIdCtrl,
+  deleteCatalogByIdCtrl
 } = require('../controllers/catalog')
 
 router.get('/images', allImageUrls)
 router.post('/', createCatalogItem)
 router.get('/', getCatalogItems)
 router.get('/:id', getCatalogByIdCtrl)
+router.delete('/:id', deleteCatalogByIdCtrl)
 
 module.exports = router

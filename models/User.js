@@ -34,7 +34,7 @@ userSchema.methods.createToken = async function () {
       userId: this._id
     },
     process.env.JWT_SECRET || 'secret',
-    { expiresIn: process.env.TOKEN_LIFITIME || '31d' }
+    { expiresIn: process.env.TOKEN_LIFETIME || '31d' }
   )
   return `Bearer ${token}`
 }

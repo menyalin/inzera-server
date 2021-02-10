@@ -75,9 +75,16 @@ module.exports.getSetPriceById = async id => {
   return res
 }
 
-module.exports.deletePriceInPrices = async ids => {
+module.exports.deletePriceInPrices = async (ids, needDeleteInSetPrices = false) => {
   // удаляем цены в таблице Prices, на вход получаем массив _id price
-  if (ids) {
+  if (!!ids && !!ids.length) {
+    if (needDeleteInSetPrices) {
+      for (let i = 0; i < ids.length; i++) {
+        let setPrice = await SetPricesModel.findOne({ prices: ids[i] })
+        setPrice.prices = setPrice.prices.filter(item => item.toString() !== ids[i].toString())
+        await setPrice.save()
+      }
+    }
     await PriceModel.deleteMany({ _id: ids })
   }
   return true

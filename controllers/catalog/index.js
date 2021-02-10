@@ -1,7 +1,14 @@
 const Catalog = require('../../models/Catalog')
 const fs = require('fs/promises')
 const path = require('path')
-const { getItems, getCatalogById } = require('./logic')
+const {
+  getItems,
+  getCatalogById,
+  deleteCatalogFromSeries,
+  getPricesIdByCatalogId,
+  deleteCatalogById
+} = require('./logic')
+const { deletePriceInPrices } = require('../price/logic')
 
 module.exports.allImageUrls = async (req, res) => {
   const reqFolder = req.query.folder
@@ -120,4 +127,20 @@ module.exports.getCatalogByIdCtrl = async (req, res) => {
     console.log(e)
     res.status(500).json({ message: 'error in "getCatalogByIdCtrl"' })
   }
+}
+module.exports.deleteCatalogByIdCtrl = async (req, res) => {
+  const _id = req.params.id
+  if (!_id) return res.status(400).json({ message: 'bad request, no _id param' })
+  // if (!req.userId) return res.status(403).json({ message: 'not auth' })
+
+  // Найти серии и удалить
+  await deleteCatalogFromSeries(_id)
+
+  // Найти Prices с номенклатурой
+  let priceIds = await getPricesIdByCatalogId(_id)
+
+  await deletePriceInPrices(priceIds, true) // Удаляем строки в setPrice и документы Price
+  await deleteCatalogById(_id)
+
+  res.status(200).json({ message: 'test ok' })
 }
