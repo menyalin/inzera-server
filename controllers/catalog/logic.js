@@ -14,8 +14,10 @@ const _sortingPrices = (a, b) => {
 const _getActualPrice = catalogItem => {
   // принимает на вход экземпляр mongoose CatalogItem
   if (catalogItem.type === 'item' && catalogItem.prices.length >= 1) {
-    const sortedPrices = catalogItem.prices.sort(_sortingPrices)
-    return Object.assign({}, sortedPrices[0])
+    const sortedPrices = catalogItem
+    .prices
+    .sort(_sortingPrices)
+    return [...sortedPrices]
   } else {
     return []
   }
@@ -27,8 +29,8 @@ module.exports.getItems = async (options, withPrices = false, priceOptions) => {
     catalogItems = await CatalogModel.find(options).populate({
       path: 'prices',
       match: priceOptions
-    })
-    // получаем актуальную цену на товар
+    }).sort({rank: 1})
+    // получаем актуальные цены на товар
     for (let i = 0; i < catalogItems.length; i++) {
       catalogItems[i].prices = _getActualPrice(catalogItems[i])
     }
@@ -72,6 +74,7 @@ module.exports.getCatalogById = async (id, date) => {
 
 module.exports.deleteCatalogById = async (_id) => {
     await CatalogModel.deleteOne({_id })
+    return true
 }
 
 module.exports.deleteCatalogFromSeries = async skuId => {
@@ -80,6 +83,7 @@ module.exports.deleteCatalogFromSeries = async skuId => {
     series[i].sku = series[i].sku.filter(item => item.toString() !== skuId.toString())
     await series[i].save()
   }
+  return true
 }
 
 module.exports.getPricesIdByCatalogId = async skuId => {

@@ -105,7 +105,6 @@ module.exports.getCatalogItems = async (req, res) => {
     withPrices = false
   }
   if (req.query.date) {
-    withPrices = true
     priceOptions.startDate = { $lte: req.query.date }
     priceOptions.$or = [{ endDate: { $gte: req.query.date } }, { endDate: null }]
   }
@@ -120,6 +119,7 @@ module.exports.getCatalogItems = async (req, res) => {
 module.exports.getCatalogByIdCtrl = async (req, res) => {
   const _id = req.params.id
   if (!_id) res.status(400).json({ message: 'bad request, no _id param' })
+
   try {
     const catalogItem = await getCatalogById(_id, req.query.date)
     res.json(catalogItem)
